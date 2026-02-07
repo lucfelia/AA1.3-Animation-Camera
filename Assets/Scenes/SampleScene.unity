@@ -8974,6 +8974,7 @@ GameObject:
   - component: {fileID: 963194230}
   - component: {fileID: 963194229}
   - component: {fileID: 963194231}
+  - component: {fileID: 963194232}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -9049,11 +9050,11 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: -3}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2120384275}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
@@ -9148,6 +9149,21 @@ MonoBehaviour:
   lookAtMask:
     serializedVersion: 2
     m_Bits: 55
+--- !u!114 &963194232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 450344ededf6600428816d7acfc565ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raycastLookAt: {fileID: 963194231}
+  lookAtTarget: {fileID: 1985941395}
+  aimPointPrefab: {fileID: 8234037152904905364, guid: 0c3471ae729912143bfe5c08bbf069a6, type: 3}
 --- !u!1 &1050062902
 GameObject:
   m_ObjectHideFlags: 0
@@ -19594,6 +19610,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2120384275}
+  - component: {fileID: 2120384276}
   m_Layer: 3
   m_Name: CameraFollow
   m_TagString: Untagged
@@ -19613,9 +19630,34 @@ Transform:
   m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 963194228}
   m_Father: {fileID: 1089316526}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2120384276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2120384274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c661072b1666e2448c4b4f522d17dee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1089316526}
+  mouseSensitivity: 120
+  minPitch: -30
+  maxPitch: 60
+  height: 1.5
+  distance: 4
+  sideOffset: 0.5
+  overlapRadius: 0.35
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  returnSpeed: 6
 --- !u!1 &2120774273
 GameObject:
   m_ObjectHideFlags: 0
@@ -19936,7 +19978,6 @@ SceneRoots:
   - {fileID: 1932285504}
   - {fileID: 677985028}
   - {fileID: 73724383}
-  - {fileID: 963194228}
   - {fileID: 1089316526}
   - {fileID: 782628380}
   - {fileID: 1644645377}
