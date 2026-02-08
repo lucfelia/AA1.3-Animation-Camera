@@ -10,14 +10,25 @@ public class Projectile : MonoBehaviour
     public LayerMask layers;
     public float collisionForceMultiplier = 2f;
     public float radius = .1f;
+
+    [Header("Decal")]
+    public GameObject bulletHolePrefab;
+
     [HideInInspector]
     public Rigidbody rb;
 
     Vector3 lastPos;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.AddRelativeForce(new Vector3(Random.Range(forceMin.x, forceMax.x), Random.Range(forceMin.y, forceMax.y), Random.Range(forceMin.z, forceMax.z)));
+
+        rb.AddRelativeForce(new Vector3(
+            Random.Range(forceMin.x, forceMax.x),
+            Random.Range(forceMin.y, forceMax.y),
+            Random.Range(forceMin.z, forceMax.z)
+        ));
+
         Destroy(gameObject, disappearTime);
         lastPos = transform.position;
         transform.parent = null;
@@ -30,7 +41,6 @@ public class Projectile : MonoBehaviour
         Debug.DrawRay(lastPos, dir, Color.blue, disappearTime);
 
         RaycastHit hit;
-
         if (Physics.SphereCast(lastPos, radius, dir, out hit, dir.magnitude, layers))
         {
             Hitted(hit);
@@ -43,8 +53,23 @@ public class Projectile : MonoBehaviour
     {
         if (hit.rigidbody)
         {
-            hit.rigidbody.AddForceAtPosition(rb.linearVelocity * rb.mass * collisionForceMultiplier, this.transform.position);
+            hit.rigidbody.AddForceAtPosition(
+                rb.linearVelocity * rb.mass * collisionForceMultiplier,
+                hit.point
+            );
         }
+
+        if (bulletHolePrefab != null)
+        {
+            Quaternion rotation = Quaternion.LookRotation(hit.normal);
+            GameObject hole = Instantiate(bulletHolePrefab, hit.point, rotation);
+
+            if (hit.transform != null)
+            {
+                hole.transform.SetParent(hit.transform);
+            }
+        }
+
         Destroy(gameObject);
     }
 }
