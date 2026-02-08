@@ -4,17 +4,8 @@ public class CameraAimApplier : MonoBehaviour
 {
     [SerializeField] private RaycastLookAt raycastLookAt;
     [SerializeField] private Transform lookAtTarget;
-    [SerializeField] private GameObject aimPointPrefab;
 
     private GameObject aimPointInstance;
-
-    private void Start()
-    {
-        if (aimPointPrefab != null)
-        {
-            aimPointInstance = Instantiate(aimPointPrefab);
-        }
-    }
 
     private void LateUpdate()
     {
