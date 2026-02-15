@@ -27,8 +27,13 @@ public class GenericGun : MonoBehaviour
     Vector3 originalPosition;
     Quaternion originalRotation;
 
+    // Timer to control fire rate between shots
     private float fireTimer;
+
+    // Flag to know if weapon is currently reloading
     private bool reloading;
+
+    // Input system reference to read attack button
     private InputSystem_Actions input;
 
     private void Start()
@@ -36,6 +41,7 @@ public class GenericGun : MonoBehaviour
         originalPosition = transform.localPosition;
         originalRotation = transform.localRotation;
 
+        // Initialize input system to detect shooting
         input = new InputSystem_Actions();
         input.Enable();
     }
@@ -54,9 +60,11 @@ public class GenericGun : MonoBehaviour
             rotationRecover * Time.deltaTime
         );
 
+        // Handle shooting logic every frame
         HandleFire();
     }
 
+    // Controls when the weapon can shoot: automatic mode, fire rate, ammo & reolad
     private void HandleFire()
     {
         if (reloading)
@@ -87,6 +95,7 @@ public class GenericGun : MonoBehaviour
         fireTimer = fireRate;
     }
 
+    // Waits reloadTime and refills the clip
     private IEnumerator ReloadCoroutine()
     {
         reloading = true;

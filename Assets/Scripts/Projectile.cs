@@ -11,6 +11,7 @@ public class Projectile : MonoBehaviour
     public float collisionForceMultiplier = 2f;
     public float radius = .1f;
 
+    // Prefab used to spawn a bullet hole on impact :)
     [Header("Decal")]
     public GameObject bulletHolePrefab;
 
@@ -53,17 +54,21 @@ public class Projectile : MonoBehaviour
     {
         if (hit.rigidbody)
         {
+            // Apply force to rigidbody at the impact point (not at projectile pos)
             hit.rigidbody.AddForceAtPosition(
                 rb.linearVelocity * rb.mass * collisionForceMultiplier,
                 hit.point
             );
         }
 
+        // Spawn bullet hole at impact position
         if (bulletHolePrefab != null)
         {
+            // Rotate it using the surface normal
             Quaternion rotation = Quaternion.LookRotation(hit.normal);
             GameObject hole = Instantiate(bulletHolePrefab, hit.point, rotation);
 
+            // Parent it to the hit object so it moves with it
             if (hit.transform != null)
             {
                 hole.transform.SetParent(hit.transform);

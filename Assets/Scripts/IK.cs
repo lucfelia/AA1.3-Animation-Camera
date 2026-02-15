@@ -18,7 +18,7 @@ public class IK : MonoBehaviour
 
     private void OnAnimatorIK(int layerIndex)
     {
-        //Cabeza look
+        //Head Look
         anim.SetLookAtWeight(lookWeight, lookWeight);
         anim.SetLookAtPosition(look.position);
 

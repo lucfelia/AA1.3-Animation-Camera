@@ -21,6 +21,8 @@ public class CameraFollow : MonoBehaviour
 
     [Header("Smoothing")]
     [SerializeField] private float returnSpeed = 6f;
+
+    // Used to know if camera was colliding in previous frame
     private bool wasOverlapping;
     private Vector3 collisionPosition;
 
@@ -36,10 +38,12 @@ public class CameraFollow : MonoBehaviour
         input = new InputSystem_Actions();
         input.Enable();
 
+        // Store initial rotation values
         Vector3 initialEuler = transform.rotation.eulerAngles;
         yaw = initialEuler.y;
         pitch = initialEuler.x;
 
+        // Lock cursor for third person camera control
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -47,10 +51,9 @@ public class CameraFollow : MonoBehaviour
     private void LateUpdate()
     {
         if (target == null)
-        {
             return;
-        }
 
+        // First rotate camera based on mouse input & update camera position relative to target
         HandleMouseLook();
         FollowTarget();
     }
@@ -59,7 +62,10 @@ public class CameraFollow : MonoBehaviour
     {
         Vector2 lookInput = input.Player.Look.ReadValue<Vector2>();
 
+        // Horizontal rotation
         yaw += lookInput.x * mouseSensitivity * Time.deltaTime;
+
+        // Vertical rotation with clamp
         pitch -= lookInput.y * mouseSensitivity * Time.deltaTime;
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
 
@@ -68,13 +74,16 @@ public class CameraFollow : MonoBehaviour
 
     private void FollowTarget()
     {
+        // Position we want the camera to look at (slighlty above the player)
         Vector3 targetPosition = target.position + Vector3.up * height;
 
+        // Ideal camera position (behind and slighlty to the side)
         Vector3 desiredPosition =
             targetPosition
             - transform.forward * distance
             + transform.right * sideOffset;
 
+        // Check if camera would overlap with environment
         bool overlapping = Physics.OverlapSphere(
             desiredPosition,
             overlapRadius,
@@ -83,12 +92,14 @@ public class CameraFollow : MonoBehaviour
 
         if (overlapping)
         {
+            // If colliding move camera closer instantly
             collisionPosition = targetPosition - transform.forward * (distance * 0.5f);
             currentPosition = collisionPosition;
             wasOverlapping = true;
         }
         else
         {
+            // If we were colliding before return to position
             if (wasOverlapping)
             {
                 currentPosition = Vector3.Lerp(
@@ -97,6 +108,7 @@ public class CameraFollow : MonoBehaviour
                     Time.deltaTime * returnSpeed
                 );
 
+                // Stop lerping once close enough
                 if ((currentPosition - desiredPosition).sqrMagnitude < 0.001f)
                 {
                     currentPosition = desiredPosition;
@@ -105,16 +117,19 @@ public class CameraFollow : MonoBehaviour
             }
             else
             {
+                // Normal case: just stay at desired position :)
                 currentPosition = desiredPosition;
             }
         }
 
+        // Apply final position and make camera look at player
         transform.position = currentPosition;
         transform.LookAt(targetPosition);
     }
 
     private void OnDrawGizmosSelected()
     {
+        // Visualize overlap sphere in editor
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, overlapRadius);
     }
